@@ -1,5 +1,4 @@
-package br.com.geofusion.cart;
-
+package br.com.geofusion.ShoppingCart.model;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -9,7 +8,7 @@ import java.util.List;
  * Classe que representa o carrinho de compras de um cliente.
  */
 public class ShoppingCart {
-
+    private StatusShoppingCart status;
     private List<Item> items;
 
     /**
@@ -22,22 +21,22 @@ public class ShoppingCart {
      *
      * Devem ser lançadas subclasses de RuntimeException caso não seja possível adicionar o item ao carrinho de compras.
      *
-     * @param product
+     * @param productSynthetic
      * @param unitPrice
      * @param quantity
      */
-    public void addItem(Product product, BigDecimal unitPrice, int quantity) {
-
+    public void addItem(ProductSynthetic productSynthetic, BigDecimal unitPrice, int quantity) {
+        if ()
     }
 
     /**
      * Permite a remoção do item que representa este produto do carrinho de compras.
      *
-     * @param product
+     * @param productSynthetic
      * @return Retorna um boolean, tendo o valor true caso o produto exista no carrinho de compras e false
      * caso o produto não exista no carrinho.
      */
-    public boolean removeItem(Product product) {
+    public boolean removeItem(ProductSynthetic productSynthetic) {
         return false;
     }
 
@@ -61,7 +60,8 @@ public class ShoppingCart {
      * @return BigDecimal
      */
     public BigDecimal getAmount() {
-        return null;
+        BigDecimal amount = null;
+        return amount;
     }
 
     /**
@@ -71,5 +71,13 @@ public class ShoppingCart {
      */
     public Collection<Item> getItems() {
         return null;
+    }
+
+    public StatusShoppingCart getStatus() {
+        return status;
+    }
+
+    public boolean isActive() {
+        return StatusShoppingCart.ACTIVE.equals(this.status);
     }
 }

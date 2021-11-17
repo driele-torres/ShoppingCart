@@ -1,4 +1,6 @@
-package br.com.geofusion.cart;
+package br.com.geofusion.ShoppingCart.factory;
+
+import br.com.geofusion.ShoppingCart.model.ShoppingCart;
 
 import java.math.BigDecimal;
 
