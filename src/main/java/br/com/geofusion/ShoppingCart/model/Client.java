@@ -1,17 +1,17 @@
 package br.com.geofusion.ShoppingCart.model;
 
+import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Classe que representa o cliente que pode criar um carrinho de compras.
  */
 @Entity
-public class Client {
-
-    private @Id @GeneratedValue Long code;
+@Table(name = "client")
+public class Client implements Serializable {
+    @Id
+    private Long code;
     private String description;
 
     public Long getCode() {
@@ -39,6 +39,7 @@ public class Client {
     public String toString() {
         return "Client{ code=" + this.code + ", name='" + this.description + '}';
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)

@@ -1,7 +1,7 @@
 package br.com.geofusion.ShoppingCart.model;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
@@ -10,11 +10,20 @@ import java.util.Objects;
 /**
  * Classe que representa o carrinho de compras de um cliente.
  */
-public class ShoppingCart {
-    private @Id
-    @GeneratedValue
-    Long code;
+@Entity
+@Table(name = "shopping_cart")
+public class ShoppingCart implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long code;
     private StatusShoppingCart status;
+
+    @ManyToOne
+    @JoinColumn(name = "client_code")
+    private Client client;
+
+    @OneToMany
+    @JoinColumn(name = "shopping_cart_code")
     private List<Item> items;
 
     /**
@@ -27,22 +36,22 @@ public class ShoppingCart {
      *
      * Devem ser lançadas subclasses de RuntimeException caso não seja possível adicionar o item ao carrinho de compras.
      *
-     * @param productSynthetic
+     * @param product
      * @param unitPrice
      * @param quantity
      */
-    public void addItem(ProductSynthetic productSynthetic, BigDecimal unitPrice, int quantity) {
+    public void addItem(Product product, BigDecimal unitPrice, int quantity) {
 
     }
 
     /**
      * Permite a remoção do item que representa este produto do carrinho de compras.
      *
-     * @param productSynthetic
+     * @param product
      * @return Retorna um boolean, tendo o valor true caso o produto exista no carrinho de compras e false
      * caso o produto não exista no carrinho.
      */
-    public boolean removeItem(ProductSynthetic productSynthetic) {
+    public boolean removeItem(Product product) {
         return false;
     }
 
@@ -96,6 +105,16 @@ public class ShoppingCart {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(this.code);
+    }
+
+    @Override
+    public String toString() {
+        return "ShoppingCart { code=" + this.code + '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
@@ -105,15 +124,5 @@ public class ShoppingCart {
             return false;
         ShoppingCart obj = (ShoppingCart) o;
         return Objects.equals(this.code, obj.code);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.code);
-    }
-
-    @Override
-    public String toString() {
-        return "ShoppingCart { code=" + this.code + '}';
     }
 }

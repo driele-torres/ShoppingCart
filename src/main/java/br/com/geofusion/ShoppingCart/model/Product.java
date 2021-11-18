@@ -1,5 +1,7 @@
 package br.com.geofusion.ShoppingCart.model;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -11,11 +13,20 @@ import java.util.Objects;
  * mesmo código.
  */
 
-public class ProductSynthetic {
+@Entity
+@Table(name = "product")
+public class Product implements Serializable {
+    @Id
     private Long code;
     private String description;
+
+    @Column(name = "amount_available")
     private BigDecimal amountAvailable;
+
+    @Column(name = "amount_pending")
     private BigDecimal amountPending;
+
+    @Column(name = "price_current")
     private BigDecimal priceCurrent;
 
     /**
@@ -25,10 +36,15 @@ public class ProductSynthetic {
      * @param amountAvailable
      * @param priceCurrent
      */
-    public ProductSynthetic(String description, BigDecimal amountAvailable, BigDecimal priceCurrent) {
+    public Product(Long code, String description, BigDecimal amountAvailable, BigDecimal priceCurrent) {
+        this.code = code;
         this.description = description;
         this.priceCurrent = priceCurrent;
         this.amountAvailable = amountAvailable;
+    }
+
+    public Product() {
+
     }
 
     /**
@@ -40,6 +56,10 @@ public class ProductSynthetic {
         return this.code;
     }
 
+    public void setCode(Long code) {
+        this.code = code;
+    }
+
     /**
      * Retorna a descrição do produto.
      *
@@ -47,6 +67,9 @@ public class ProductSynthetic {
      */
     public String getDescription() {
         return this.description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public BigDecimal getAmountAvailable() {
@@ -74,18 +97,24 @@ public class ProductSynthetic {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(this.code, this.description);
+    }
+
+    @Override
+    public String toString() {
+        return "Product{ code=" + this.code + ", description='" + this.description + '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
         if (o == null)
             return false;
-        if (!(o instanceof ProductSynthetic))
+        if (!(o instanceof Product))
             return false;
-        ProductSynthetic obj = (ProductSynthetic) o;
+        Product obj = (Product) o;
         return Objects.equals(this.code, obj.code);
-    }
-
-    public void setCode(Long code) {
-        this.code = code;
     }
 }
