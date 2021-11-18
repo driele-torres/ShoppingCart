@@ -1,19 +1,18 @@
 package br.com.geofusion.ShoppingCart.model;
 
-import java.util.List;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-@Entity
 /**
  * Classe que representa o cliente que pode criar um carrinho de compras.
  */
+@Entity
 public class Client {
-    private Long code;
-    private String name;
-    private List<ShoppingCart> carts;
+
+    private @Id @GeneratedValue Long code;
+    private String description;
 
     public Long getCode() {
         return code;
@@ -23,21 +22,33 @@ public class Client {
         this.code = code;
     }
 
-    public String getName() {
-        return name;
+    public String getDescription() {
+        return description;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public List<ShoppingCart> getCarts() {
-        return carts;
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.code, this.description);
     }
 
-    public void setCarts(List<ShoppingCart> carts) {
-        this.carts = carts;
+    @Override
+    public String toString() {
+        return "Client{ code=" + this.code + ", name='" + this.description + '}';
     }
-
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null)
+            return false;
+        if (!(o instanceof Client))
+            return false;
+        Client obj = (Client) o;
+        return Objects.equals(this.code, obj.code) && Objects.equals(this.description, obj.description);
+    }
 }
 

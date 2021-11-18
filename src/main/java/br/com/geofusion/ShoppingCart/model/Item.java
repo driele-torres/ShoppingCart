@@ -3,6 +3,10 @@ package br.com.geofusion.ShoppingCart.model;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 /**
  * Classe que representa um item no carrinho de compras.
  */
@@ -34,7 +38,7 @@ public class Item {
      * @return Produto
      */
     public ProductSynthetic getProduct() {
-        return productSynthetic;
+        return this.productSynthetic;
     }
 
     /**
@@ -43,8 +47,8 @@ public class Item {
      * @return BigDecimal
      */
     public BigDecimal getOriginalUnitPrice() {
-        if (productSynthetic!=null)
-            productSynthetic.getPriceCurrent();
+        if (this.productSynthetic!=null)
+            this.productSynthetic.getPriceCurrent();
         return new BigDecimal(0);
     }
 
@@ -63,7 +67,7 @@ public class Item {
      * @return int
      */
     public int getQuantity() {
-        return 0;
+        return this.quantity;
     }
 
     /**
@@ -72,28 +76,29 @@ public class Item {
      * @return BigDecimal
      */
     public BigDecimal getAmount() {
-        return null;
+        return this.unitPrice.multiply(new BigDecimal(this.quantity));
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
+        if (o == null)
+            return false;
         if (!(o instanceof Item))
             return false;
-        Item employee = (Item) o;
-        return Objects.equals(this.code, employee.id) && Objects.equals(this.name, employee.name)
-                && Objects.equals(this.role, employee.role);
+        Item obj = (Item) o;
+        return Objects.equals(this.code, obj.code);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.id, this.name, this.role);
+        return Objects.hash(this.code);
     }
 
     @Override
     public String toString() {
-        return "ShoppingCartItem{" + "id=" + this.id + ", name='" + this.name + '\'' + ", role='" + this.role + '\'' + '}';
+        return "ShoppingCartItem { code=" + this.code + '}';
     }
 }
 

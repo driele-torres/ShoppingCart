@@ -1,13 +1,19 @@
 package br.com.geofusion.ShoppingCart.model;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Classe que representa o carrinho de compras de um cliente.
  */
 public class ShoppingCart {
+    private @Id
+    @GeneratedValue
+    Long code;
     private StatusShoppingCart status;
     private List<Item> items;
 
@@ -26,7 +32,7 @@ public class ShoppingCart {
      * @param quantity
      */
     public void addItem(ProductSynthetic productSynthetic, BigDecimal unitPrice, int quantity) {
-        if ()
+
     }
 
     /**
@@ -79,5 +85,35 @@ public class ShoppingCart {
 
     public boolean isActive() {
         return StatusShoppingCart.ACTIVE.equals(this.status);
+    }
+
+    public Long getCode() {
+        return code;
+    }
+
+    public void setCode(Long code) {
+        this.code = code;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null)
+            return false;
+        if (!(o instanceof ShoppingCart))
+            return false;
+        ShoppingCart obj = (ShoppingCart) o;
+        return Objects.equals(this.code, obj.code);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.code);
+    }
+
+    @Override
+    public String toString() {
+        return "ShoppingCart { code=" + this.code + '}';
     }
 }

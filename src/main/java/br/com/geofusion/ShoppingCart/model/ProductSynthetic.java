@@ -1,6 +1,7 @@
 package br.com.geofusion.ShoppingCart.model;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * Classe que representa um produto que pode ser adicionado
@@ -20,12 +21,14 @@ public class ProductSynthetic {
     /**
      * Construtor da classe Produto.
      *
-     * @param code
      * @param description
+     * @param amountAvailable
+     * @param priceCurrent
      */
-    public ProductSynthetic(Long code, String description) {
-        this.code = code;
+    public ProductSynthetic(String description, BigDecimal amountAvailable, BigDecimal priceCurrent) {
         this.description = description;
+        this.priceCurrent = priceCurrent;
+        this.amountAvailable = amountAvailable;
     }
 
     /**
@@ -71,20 +74,18 @@ public class ProductSynthetic {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
+    public boolean equals(Object o) {
+        if (this == o)
             return true;
-        if (obj == null)
+        if (o == null)
             return false;
-        if (getClass() != obj.getClass())
+        if (!(o instanceof ProductSynthetic))
             return false;
+        ProductSynthetic obj = (ProductSynthetic) o;
+        return Objects.equals(this.code, obj.code);
+    }
 
-        ProductSynthetic other = (ProductSynthetic) obj;
-        if (code == null) {
-            if (other.code != null)
-                return false;
-        } else if (!code.equals(other.code))
-            return false;
-        return true;
+    public void setCode(Long code) {
+        this.code = code;
     }
 }
