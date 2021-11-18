@@ -14,6 +14,13 @@ public class Client implements Serializable {
     private Long code;
     private String description;
 
+    public Client( Long code, String description){
+        this.code = code;
+        this.description = description;
+    }
+    public Client( ){
+    }
+
     public Long getCode() {
         return code;
     }

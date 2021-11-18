@@ -22,9 +22,19 @@ public class ShoppingCart implements Serializable {
     @JoinColumn(name = "client_code")
     private Client client;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "shopping_cart_code")
     private List<Item> items;
+
+    public ShoppingCart(Long code, StatusShoppingCart status, Client client, List<Item> items) {
+        this.code = code;
+        this.status = status;
+        this.client = client;
+        this.items = items;
+    }
+
+    public ShoppingCart(){
+    }
 
     /**
      * Permite a adição de um novo item no carrinho de compras.

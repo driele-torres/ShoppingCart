@@ -1,8 +1,12 @@
 package br.com.geofusion.ShoppingCart.factory;
 
-import br.com.geofusion.ShoppingCart.model.ShoppingCart;
+//import org.springframework.web.bind.annotation.GetMapping;
+//import org.springframework.web.bind.annotation.PathVariable;
+//import java.util.List;
 
+import br.com.geofusion.ShoppingCart.model.ShoppingCart;
 import java.math.BigDecimal;
+
 
 /**
  * Classe responsável pela criação e recuperação dos carrinhos de compras.
@@ -45,4 +49,8 @@ public class ShoppingCartFactory {
     public boolean invalidate(String clientId) {
         return false;
     }
+    public boolean invalidateByClient(String clientId) {
+        return false;
+    }
+
 }

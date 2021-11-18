@@ -6,15 +6,10 @@ import br.com.geofusion.ShoppingCart.repository.ProductRepository;
 import br.com.geofusion.ShoppingCart.exception.ProductNotFoundException;
 import br.com.geofusion.ShoppingCart.model.Product;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping(value="/products")
 class ProductController {
         private final ProductRepository repository;
 
@@ -22,27 +17,23 @@ class ProductController {
                 this.repository = repository;
         }
 
-        // Aggregate root
-        // tag::get-aggregate-root[]
-        @GetMapping("/products")
+        @GetMapping()
         List<Product> all() {
                 return repository.findAll();
         }
-        // end::get-aggregate-root[]
 
-        @PostMapping("/products")
+        @PostMapping()
         Product getNewProduct(@RequestBody Product newProduct) {
                 return repository.save(newProduct);
         }
 
-        // Single item
-        @GetMapping("/products/{code}")
+        @GetMapping("/{code}")
         Product one(@PathVariable Long code) {
                 return repository.findById(code)
                         .orElseThrow(() -> new ProductNotFoundException(code));
         }
 
-        @PutMapping("/products/{code}")
+        @PutMapping("/{code}")
         Product replaceProduct(@RequestBody Product newProduct, @PathVariable Long code) {
                 return repository.findById(code)
                         .map(product -> {
@@ -58,7 +49,7 @@ class ProductController {
                         });
         }
 
-        @DeleteMapping("/products/{code}")
+        @DeleteMapping("/{code}")
         void deleteProduct(@PathVariable Long code) {
                 repository.deleteById(code);
         }

@@ -1,75 +1,64 @@
-
 package br.com.geofusion.ShoppingCart.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
-//import br.com.geofusion.ShoppingCart.exception.ShoppingCartNotFoundException;
-//import br.com.geofusion.ShoppingCart.model.Item;
-import br.com.geofusion.ShoppingCart.model.ShoppingCart;
-import br.com.geofusion.ShoppingCart.repository.ShoppingCartRepository;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import br.com.geofusion.ShoppingCart.model.Item;
+import br.com.geofusion.ShoppingCart.model.ShoppingCart;
+import br.com.geofusion.ShoppingCart.service.ShoppingCartService;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping(value="/carts")
 class ShoppingCartController {
-        private final ShoppingCartRepository repository;
+        private final ShoppingCartService service;
 
-        ShoppingCartController(ShoppingCartRepository repository) {
-                this.repository = repository;
+        ShoppingCartController(ShoppingCartService service) {
+                this.service = service;
         }
 
-        // Aggregate root
-        // tag::get-aggregate-root[]
-        @GetMapping("/client/{idCliente}/shoppingcart")
-        List<ShoppingCart> all(@PathVariable Long idCliente) {
-                return repository.findAll();
+        @PutMapping("/client/{idClient}/create")
+        ShoppingCart create(@PathVariable Long idClient) {
+                return service.create(idClient);
         }
-        // end::get-aggregate-root[]
-//
-//        @PostMapping("/shoppingcart/{idCliente}")
-//        ShoppingCart newShoppingCart(@PathVariable Long idCliente) {
-////                repository.save(newShoppingCart)
-//                return new ShoppingCart();
-//        }
-//
-//        @PostMapping("/shoppingcart/items")
-//        ShoppingCart addItem(@RequestBody Long idCliente) {
-////                repository.save(newShoppingCart)
-//                return new ShoppingCart();
-//        }
-//
-//        @PutMapping("/shoppingcart/items")
-//        ShoppingCart replaceEmployee(@RequestBody ShoppingCart newShoppingCart, @PathVariable Long id) {
-//                return repository.findById(id)
-//                        .map(employee -> {
-//                                employee.setName(newShoppingCart.getName());
-//                                employee.setRole(newShoppingCart.getRole());
-//                                return repository.save(employee);
-//                        })
-//                        .orElseGet(() -> {
-//                                newEmployee.setId(id);
-//                                return repository.save(newShoppingCart);
-//                        });
-//        }
-//
-////        @PathVariable Long idCliente
-//        // Single item
-//
-//        @GetMapping("/shoppingcart/items")
-//        ShoppingCart one(@PathVariable Long id) {
-//                return repository.findById(id)
-//                        .orElseThrow(() -> new ShoppingCartNotFoundException(id));
-//        }
-//
-//
-//
-//        @DeleteMapping("/shoppingcart/{code}")
-//        void deleteEmployee(@PathVariable Long id) {
-//                repository.deleteById(id);
-//        }
+
+        @GetMapping("/client/{idClient}")
+        List<ShoppingCart> allByIdClient(@PathVariable Long idClient) {
+                return service.findAll(idClient);
+        }
+
+        @GetMapping("/client/{idClient}/status/{status}")
+        List<ShoppingCart> allByIdClientAndStatus(@PathVariable Long idClient, @PathVariable int status) {
+                return service.findAllByIdClientAndStatus(idClient, status);
+        }
+
+        @GetMapping("/client/{idClient}/amount")
+        String allAmountByClient(@PathVariable Long idClient) {
+                BigDecimal amount = service.getAverageTicketAmount(idClient);
+                return amount.toString();
+        }
+
+        @PutMapping("/client/{idClient}/invalidate")
+        boolean invalidate(@PathVariable Long idClient) {
+               return service.invalidate(idClient);
+        }
+
+        @PostMapping("/client/{idClient}/items")
+        ShoppingCart addItem(@PathVariable Long idClient, @RequestBody Item item ) {
+                return service.addItem(idClient, item);
+        }
+
+        @DeleteMapping("/client/{idClient}/items/{code}")
+        ShoppingCart removeItem(@PathVariable Long idClient, @PathVariable Long code ) {
+                return service.removeItem(idClient, code);
+        }
+
+        @GetMapping("/amount")
+        String allAmount() {
+                BigDecimal amount = service.getAverageTicketAmount();
+                return amount.toString();
+        }
 }

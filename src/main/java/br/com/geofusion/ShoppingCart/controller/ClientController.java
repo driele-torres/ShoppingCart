@@ -6,15 +6,10 @@ import br.com.geofusion.ShoppingCart.repository.ClientRepository;
 import br.com.geofusion.ShoppingCart.exception.ClientNotFoundException;
 import br.com.geofusion.ShoppingCart.model.Client;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping(value="/clients")
 class ClientController {
         private final ClientRepository repository;
 
@@ -22,27 +17,23 @@ class ClientController {
                 this.repository = repository;
         }
 
-        // Aggregate root
-        // tag::get-aggregate-root[]
-        @GetMapping("/clients")
+        @GetMapping()
         List<Client> all() {
                 return repository.findAll();
         }
-        // end::get-aggregate-root[]
 
-        @PostMapping("/clients")
+        @PostMapping()
         Client getNewClient(@RequestBody Client newClient) {
                 return repository.save(newClient);
         }
 
-        // Single item
-        @GetMapping("/clients/{code}")
+        @GetMapping("/{code}")
         Client one(@PathVariable Long code) {
                 return repository.findById(code)
                         .orElseThrow(() -> new ClientNotFoundException(code));
         }
 
-        @PutMapping("/clients/{code}")
+        @PutMapping("/{code}")
         Client replaceClient(@RequestBody Client newClient, @PathVariable Long code) {
                 return repository.findById(code)
                         .map(client -> {
@@ -55,7 +46,7 @@ class ClientController {
                         });
         }
 
-        @DeleteMapping("/clients/{code}")
+        @DeleteMapping("/{code}")
         void deleteClient(@PathVariable Long code) {
                 repository.deleteById(code);
         }
