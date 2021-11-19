@@ -39,7 +39,6 @@ class ProductController {
                         .map(product -> {
                                 product.setDescription(newProduct.getDescription());
                                 product.setAmountAvailable(newProduct.getAmountAvailable());
-                                product.setAmountPending(newProduct.getAmountPending());
                                 product.setPriceCurrent(newProduct.getPriceCurrent());
                                 return repository.save(product);
                         })

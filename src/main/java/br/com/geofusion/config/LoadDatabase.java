@@ -22,10 +22,10 @@ class LoadDatabase {
     @Bean
     CommandLineRunner initDatabase(ProductRepository productRepository, ClientRepository clientRepository) {
         return args -> {
-            log.info("Preloading " + productRepository.save( new Product( "4238","Cobertura Chocolate", new BigDecimal(456), new BigDecimal("4.56")) ));
-            log.info("Preloading " + productRepository.save( new Product( "3238","Forminha Lisa", new BigDecimal(200), new BigDecimal("6.31")) ));
-            log.info("Preloading " + productRepository.save( new Product( "1488","Prato Descartável", new BigDecimal(154), new BigDecimal("2.10")) ));
-            log.info("Preloading " + productRepository.save( new Product( "2338","Wafer Hersheys", new BigDecimal(789), new BigDecimal("9.23")) ));
+            log.info("Preloading " + productRepository.save( new Product( "4238","Cobertura Chocolate", 456, new BigDecimal("4.56")) ));
+            log.info("Preloading " + productRepository.save( new Product( "3238","Forminha Lisa", 209, new BigDecimal("6.31")) ));
+            log.info("Preloading " + productRepository.save( new Product( "1488","Prato Descartável", 158, new BigDecimal("2.10")) ));
+            log.info("Preloading " + productRepository.save( new Product( "2338","Wafer Hersheys", 256, new BigDecimal("9.23")) ));
 
             log.info("Preloading " + clientRepository.save( new Client( "2338","Bella Thorne")));
             log.info("Preloading " + clientRepository.save( new Client( "2237","Jhon Letter")));
