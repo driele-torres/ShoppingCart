@@ -28,16 +28,42 @@ public class ShoppingCart implements Serializable {
     @JoinColumn(name = "shopping_cart_id")
     private List<Item> items;
 
+    public ShoppingCart(){
+    }
+
+    public ShoppingCart(Client client) {
+        this.client = client;
+    }
+
     public ShoppingCart(StatusShoppingCart status, Client client, List<Item> items) {
         this.status = status;
         this.client = client;
         this.items = items;
     }
-    public ShoppingCart(Client client) {
-        this.client = client;
+
+    /**
+     * Retorna a lista de itens do carrinho de compras.
+     *
+     * @return items
+     */
+    public Collection<Item> getItems() {
+        return items;
     }
 
-    public ShoppingCart(){
+    public StatusShoppingCart getStatus() {
+        return status;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public boolean isActive() {
+        return StatusShoppingCart.ACTIVE.equals(this.status);
     }
 
     /**
@@ -55,7 +81,37 @@ public class ShoppingCart implements Serializable {
      * @param quantity
      */
     public void addItem(Product product, BigDecimal unitPrice, int quantity) throws ShoppingCartAddItemException {
+        if (product == null)
+            throw new ShoppingCartAddItemException("object null");
+        if (quantity <=0 )
+            throw new ShoppingCartAddItemException("invalid quantity");
+        if (unitPrice.compareTo(BigDecimal.ZERO)>=0) {
+            unitPrice = product.getPriceCurrent();
+        }
+        if (unitPrice.compareTo(BigDecimal.ZERO)>=0) {
+            throw new ShoppingCartAddItemException("invalid price");
+        }
 
+        Item item = this.getItem(product);
+
+        boolean inCart = (item != null);
+
+        int amount = quantity;
+        int position = 0;
+        if (inCart) {
+            amount += item.getQuantity();
+            item.setUnitPrice(unitPrice);
+        } else {
+            position = this.items.size();
+        }
+
+        if ( amount > product.getAmountAvailable() )
+            throw new ShoppingCartAddItemException("exceed quantity");
+
+        if (!inCart) {
+            item = new Item(this, product, unitPrice, amount , position);
+            this.items.add(item);
+        }
     }
 
     /**
@@ -66,7 +122,10 @@ public class ShoppingCart implements Serializable {
      * caso o produto não exista no carrinho.
      */
     public boolean removeItem(Product product) {
-        return false;
+        if (product == null)
+            return false;
+        Item item = this.getItem(product);
+        return (item != null);
     }
 
     /**
@@ -79,7 +138,10 @@ public class ShoppingCart implements Serializable {
      * caso o produto não exista no carrinho.
      */
     public boolean removeItem(int itemIndex) {
-        return false;
+        int qtdItems = this.items.size();
+        if (itemIndex>=qtdItems)
+            return  false;
+        return true;
     }
 
     /**
@@ -94,31 +156,6 @@ public class ShoppingCart implements Serializable {
                 .map(Item::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         return amount;
-    }
-
-    /**
-     * Retorna a lista de itens do carrinho de compras.
-     *
-     * @return items
-     */
-    public Collection<Item> getItems() {
-        return items;
-    }
-
-    public StatusShoppingCart getStatus() {
-        return status;
-    }
-
-    public boolean isActive() {
-        return StatusShoppingCart.ACTIVE.equals(this.status);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public boolean invalidate() {
@@ -146,5 +183,12 @@ public class ShoppingCart implements Serializable {
             return false;
         ShoppingCart obj = (ShoppingCart) o;
         return Objects.equals(this.id, obj.id);
+    }
+
+    private Item getItem(Product product){
+        return this.items.stream()
+                .filter(itemPart -> product.getId().equals(itemPart.getProduct().getId()))
+                .findAny()
+                .orElse(null);
     }
 }

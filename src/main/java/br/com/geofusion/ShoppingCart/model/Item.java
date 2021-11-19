@@ -14,7 +14,7 @@ public class Item implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long position;
+    private int position;
     private int quantity;
 
     @Column(name = "unit_price")
@@ -40,6 +40,22 @@ public class Item implements Serializable {
         this.product = product;
         this.unitPrice = unitPrice;
         this.quantity = quantity;
+    }
+
+    public Item(ShoppingCart shoppingCart, Product product, BigDecimal unitPrice, int quantity, int position) {
+        this.shoppingCart = shoppingCart;
+        this.product = product;
+        this.unitPrice = unitPrice;
+        this.quantity = quantity;
+        this.position = position;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     /**
@@ -94,7 +110,7 @@ public class Item implements Serializable {
     public BigDecimal getOriginalUnitPrice() {
         if (this.product !=null)
             this.product.getPriceCurrent();
-        return new BigDecimal(0);
+        return BigDecimal.ZERO;
     }
 
     @Override

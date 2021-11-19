@@ -1,7 +1,7 @@
 package br.com.geofusion.ShoppingCart.factory;
 
+import br.com.geofusion.ShoppingCart.exception.ShoppingCartNotFoundException;
 import br.com.geofusion.ShoppingCart.model.Client;
-import br.com.geofusion.ShoppingCart.model.Item;
 import br.com.geofusion.ShoppingCart.model.ShoppingCart;
 import br.com.geofusion.ShoppingCart.model.StatusShoppingCart;
 import br.com.geofusion.ShoppingCart.repository.ShoppingCartRepository;
@@ -23,7 +23,7 @@ public class ShoppingCartFactory {
 
     /**
      * Cria e retorna um novo carrinho de compras para o cliente passado como parâmetro.
-     *
+     * <p>
      * Caso já exista um carrinho de compras para o cliente passado como parâmetro, este carrinho deverá ser retornado.
      *
      * @param clientId
@@ -31,10 +31,9 @@ public class ShoppingCartFactory {
      */
     public ShoppingCart create(String clientId) {
         ShoppingCart shoppingCart = null;
-        List<ShoppingCart> shoppingCarts = this.shoppingCartRepository.findByClientCodeAndStatus(clientId, StatusShoppingCart.ACTIVE.ordinal());
-        if (!shoppingCarts.isEmpty())
-            shoppingCart = shoppingCarts.stream().findFirst().get();
-        else {
+        try {
+            shoppingCart = this.findShoppingCartActiveByIdClient(clientId);
+        } catch (ShoppingCartNotFoundException e) {
             shoppingCart = new ShoppingCart(new Client(clientId));
             this.shoppingCartRepository.saveAndFlush(shoppingCart);
         }
@@ -70,14 +69,22 @@ public class ShoppingCartFactory {
      * e false caso o cliente não possua um carrinho.
      */
     public boolean invalidate(String clientId) {
-        List<ShoppingCart> shoppingCarts = this.shoppingCartRepository.findByClientCodeAndStatus(clientId, StatusShoppingCart.ACTIVE.ordinal());
-        if (shoppingCarts.isEmpty())
+        try {
+            ShoppingCart shoppingCart = this.findShoppingCartActiveByIdClient(clientId);
+            if (!shoppingCart.invalidate())
+                return false;
+            this.shoppingCartRepository.saveAndFlush(shoppingCart);
+            return !shoppingCart.isActive();
+        } catch (ShoppingCartNotFoundException e) {
             return false;
-        ShoppingCart shoppingCart = shoppingCarts.stream().findFirst().get();
-        if (!shoppingCart.invalidate())
-            return false;
-        this.shoppingCartRepository.saveAndFlush(shoppingCart);
-        return !shoppingCart.isActive();
+        }
     }
 
+    ShoppingCart findShoppingCartActiveByIdClient(String clientId) throws ShoppingCartNotFoundException {
+        List<ShoppingCart> shoppingCarts = this.shoppingCartRepository.findByIdClientAndStatus(clientId, StatusShoppingCart.ACTIVE.ordinal());
+        if (shoppingCarts.isEmpty())
+            throw new ShoppingCartNotFoundException(clientId);
+        ShoppingCart shoppingCart = shoppingCarts.stream().findFirst().get();
+        return shoppingCart;
+    }
 }

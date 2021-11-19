@@ -8,11 +8,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Long> {
-    @Query( value = "SELECT * FROM shopping_cart u WHERE u.client_code = :clientCode",
-            nativeQuery = true)
-    List<ShoppingCart> findByClientCode(@Param("clientCode") String clientCode);
 
-    @Query( value = "SELECT * FROM shopping_cart u WHERE u.client_code = :clientCode and u.status = :status",
-            nativeQuery = true)
-    List<ShoppingCart> findByClientCodeAndStatus(@Param("clientCode") String clientCode, @Param("status") int status);
+    @Query( value = "SELECT * FROM shopping_cart u WHERE u.client_id = :client_id", nativeQuery = true)
+    List<ShoppingCart> findByIdClient(@Param("client_id") String client_id);
+
+    @Query( value = "SELECT * FROM shopping_cart u WHERE u.client_id = :client_id and u.status = :status", nativeQuery = true)
+    List<ShoppingCart> findByIdClientAndStatus(@Param("client_id") String client_id, @Param("status") int status);
 }

@@ -20,35 +20,29 @@ class ShoppingCartController {
                 this.service = service;
         }
 
-        @PutMapping("/client/{idClient}/create")
-        ShoppingCart create(@PathVariable String idClient) {
-                return service.create(idClient);
+        @PutMapping("/client/{clientId}/create")
+        ShoppingCart create(@PathVariable String clientId) {
+                return service.create(clientId);
         }
 
-        @GetMapping("/client/{idClient}")
-        List<ShoppingCart> allByIdClient(@PathVariable String idClient) {
-                return service.findAll(idClient);
+        @GetMapping("/client/{clientId}")
+        List<ShoppingCart> findByIdClient(@PathVariable String clientId) {
+                return service.findByIdClient(clientId);
         }
 
-        @GetMapping("/client/{idClient}/status/{status}")
-        List<ShoppingCart> allByIdClientAndStatus(@PathVariable String idClient, @PathVariable int status) {
-                return service.findAllByIdClientAndStatus(idClient, status);
+        @GetMapping("/client/{clientId}/status/{status}")
+        List<ShoppingCart> findByIdClientAndStatus(@PathVariable String clientId, @PathVariable int status) {
+                return service.findByIdClientAndStatus(clientId, status);
         }
 
-        @GetMapping("/client/{idClient}/amount")
-        String allAmountByClient(@PathVariable String idClient) {
-                BigDecimal amount = service.getAverageTicketAmount(idClient);
-                return amount.toString();
+        @PutMapping("/client/{clientId}/checkout")
+        boolean invalidate(@PathVariable String clientId) {
+               return service.invalidate(clientId);
         }
 
-        @PutMapping("/client/{idClient}/checkout")
-        boolean invalidate(@PathVariable String idClient) {
-               return service.invalidate(idClient);
-        }
-
-        @PostMapping("/client/{idClient}/items")
-        ShoppingCart addItem(@PathVariable String idClient, @RequestBody Item item ) {
-                return service.addItem(idClient, item);
+        @PostMapping("/client/{clientId}/items")
+        ShoppingCart addItem(@PathVariable String clientId, @RequestBody Item item ) {
+                return service.addItem(clientId, item);
         }
 
         @DeleteMapping("/client/{idClient}/items/{code}")

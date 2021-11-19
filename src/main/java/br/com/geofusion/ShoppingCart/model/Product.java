@@ -21,10 +21,7 @@ public class Product implements Serializable {
     private String description;
 
     @Column(name = "amount_available")
-    private BigDecimal amountAvailable;
-
-    @Column(name = "amount_pending")
-    private BigDecimal amountPending;
+    private int amountAvailable;
 
     @Column(name = "price_current")
     private BigDecimal priceCurrent;
@@ -36,7 +33,7 @@ public class Product implements Serializable {
      * @param amountAvailable
      * @param priceCurrent
      */
-    public Product(String id, String description, BigDecimal amountAvailable, BigDecimal priceCurrent) {
+    public Product(String id, String description, int amountAvailable, BigDecimal priceCurrent) {
         this.id = id;
         this.description = description;
         this.priceCurrent = priceCurrent;
@@ -44,7 +41,6 @@ public class Product implements Serializable {
     }
 
     public Product() {
-
     }
 
     /**
@@ -68,15 +64,16 @@ public class Product implements Serializable {
     public String getDescription() {
         return this.description;
     }
+
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public BigDecimal getAmountAvailable() {
+    public int getAmountAvailable() {
         return this.amountAvailable;
     }
 
-    public void setAmountAvailable(BigDecimal amountAvailable) {
+    public void setAmountAvailable(int amountAvailable) {
         this.amountAvailable = amountAvailable;
     }
 
@@ -86,14 +83,6 @@ public class Product implements Serializable {
 
     public void setPriceCurrent(BigDecimal priceCurrent) {
         this.priceCurrent = priceCurrent;
-    }
-
-    public BigDecimal getAmountPending() {
-        return this.amountPending;
-    }
-
-    public void setAmountPending(BigDecimal amountPending) {
-        this.amountPending = amountPending;
     }
 
     @Override

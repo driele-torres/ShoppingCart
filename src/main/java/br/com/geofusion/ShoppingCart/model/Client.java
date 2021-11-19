@@ -10,9 +10,13 @@ import javax.persistence.*;
 @Entity
 @Table(name = "client")
 public class Client implements Serializable {
+
     @Id
     private String id;
     private String description;
+
+    public Client(){
+    }
 
     public Client(String id){
         this.id = id;
@@ -22,8 +26,7 @@ public class Client implements Serializable {
         this.id = id;
         this.description = description;
     }
-    public Client(){
-    }
+
     public String getId() {
         return id;
     }
