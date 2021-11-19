@@ -2,8 +2,7 @@ package br.com.geofusion.ShoppingCart.model;
 
 public enum StatusShoppingCart {
     ACTIVE("Ativo"),
-    FINISHED("Finalizado"),
-    CANCELED("Cancelado");
+    INACTIVE("Inativo");
 
     private String description;
 

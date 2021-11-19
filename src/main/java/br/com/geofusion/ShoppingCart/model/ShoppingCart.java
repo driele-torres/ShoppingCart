@@ -1,5 +1,7 @@
 package br.com.geofusion.ShoppingCart.model;
 
+import br.com.geofusion.ShoppingCart.exception.ShoppingCartAddItemException;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -15,22 +17,24 @@ import java.util.Objects;
 public class ShoppingCart implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long code;
-    private StatusShoppingCart status;
+    private Long id;
+    private StatusShoppingCart status= StatusShoppingCart.ACTIVE;
 
     @ManyToOne
-    @JoinColumn(name = "client_code")
+    @JoinColumn(name = "client_id")
     private Client client;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "shopping_cart_code")
+    @JoinColumn(name = "shopping_cart_id")
     private List<Item> items;
 
-    public ShoppingCart(Long code, StatusShoppingCart status, Client client, List<Item> items) {
-        this.code = code;
+    public ShoppingCart(StatusShoppingCart status, Client client, List<Item> items) {
         this.status = status;
         this.client = client;
         this.items = items;
+    }
+    public ShoppingCart(Client client) {
+        this.client = client;
     }
 
     public ShoppingCart(){
@@ -50,7 +54,7 @@ public class ShoppingCart implements Serializable {
      * @param unitPrice
      * @param quantity
      */
-    public void addItem(Product product, BigDecimal unitPrice, int quantity) {
+    public void addItem(Product product, BigDecimal unitPrice, int quantity) throws ShoppingCartAddItemException {
 
     }
 
@@ -85,7 +89,10 @@ public class ShoppingCart implements Serializable {
      * @return BigDecimal
      */
     public BigDecimal getAmount() {
-        BigDecimal amount = null;
+        BigDecimal amount = this.items
+                .stream()
+                .map(Item::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         return amount;
     }
 
@@ -95,7 +102,7 @@ public class ShoppingCart implements Serializable {
      * @return items
      */
     public Collection<Item> getItems() {
-        return null;
+        return items;
     }
 
     public StatusShoppingCart getStatus() {
@@ -106,22 +113,27 @@ public class ShoppingCart implements Serializable {
         return StatusShoppingCart.ACTIVE.equals(this.status);
     }
 
-    public Long getCode() {
-        return code;
+    public Long getId() {
+        return id;
     }
 
-    public void setCode(Long code) {
-        this.code = code;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public boolean invalidate() {
+        this.status = StatusShoppingCart.INACTIVE;
+        return !this.isActive();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.code);
+        return Objects.hash(this.id);
     }
 
     @Override
     public String toString() {
-        return "ShoppingCart { code=" + this.code + '}';
+        return "ShoppingCart { id=" + this.id + '}';
     }
 
     @Override
@@ -133,6 +145,6 @@ public class ShoppingCart implements Serializable {
         if (!(o instanceof ShoppingCart))
             return false;
         ShoppingCart obj = (ShoppingCart) o;
-        return Objects.equals(this.code, obj.code);
+        return Objects.equals(this.id, obj.id);
     }
 }

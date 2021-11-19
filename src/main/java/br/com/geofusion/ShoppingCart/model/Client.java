@@ -11,22 +11,25 @@ import javax.persistence.*;
 @Table(name = "client")
 public class Client implements Serializable {
     @Id
-    private Long code;
+    private String id;
     private String description;
 
-    public Client( Long code, String description){
-        this.code = code;
+    public Client(String id){
+        this.id = id;
+    }
+
+    public Client(String id, String description){
+        this.id = id;
         this.description = description;
     }
-    public Client( ){
+    public Client(){
+    }
+    public String getId() {
+        return id;
     }
 
-    public Long getCode() {
-        return code;
-    }
-
-    public void setCode(Long code) {
-        this.code = code;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getDescription() {
@@ -39,12 +42,12 @@ public class Client implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.code, this.description);
+        return Objects.hash(this.id, this.description);
     }
 
     @Override
     public String toString() {
-        return "Client{ code=" + this.code + ", name='" + this.description + '}';
+        return "Client{ id=" + this.id + ", name='" + this.description + '}';
     }
 
     @Override
@@ -56,7 +59,7 @@ public class Client implements Serializable {
         if (!(o instanceof Client))
             return false;
         Client obj = (Client) o;
-        return Objects.equals(this.code, obj.code) && Objects.equals(this.description, obj.description);
+        return Objects.equals(this.id, obj.id) && Objects.equals(this.description, obj.description);
     }
 }
 

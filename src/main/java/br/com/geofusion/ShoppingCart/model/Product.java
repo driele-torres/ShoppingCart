@@ -17,7 +17,7 @@ import java.util.Objects;
 @Table(name = "product")
 public class Product implements Serializable {
     @Id
-    private Long code;
+    private String id;
     private String description;
 
     @Column(name = "amount_available")
@@ -36,8 +36,8 @@ public class Product implements Serializable {
      * @param amountAvailable
      * @param priceCurrent
      */
-    public Product(Long code, String description, BigDecimal amountAvailable, BigDecimal priceCurrent) {
-        this.code = code;
+    public Product(String id, String description, BigDecimal amountAvailable, BigDecimal priceCurrent) {
+        this.id = id;
         this.description = description;
         this.priceCurrent = priceCurrent;
         this.amountAvailable = amountAvailable;
@@ -52,12 +52,12 @@ public class Product implements Serializable {
      *
      * @return Long
      */
-    public Long getCode() {
-        return this.code;
+    public String getId() {
+        return this.id;
     }
 
-    public void setCode(Long code) {
-        this.code = code;
+    public void setId(String id) {
+        this.id = id;
     }
 
     /**
@@ -98,12 +98,12 @@ public class Product implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.code, this.description);
+        return Objects.hash(this.id, this.description);
     }
 
     @Override
     public String toString() {
-        return "Product{ code=" + this.code + ", description='" + this.description + '}';
+        return "Product{ id=" + this.id + ", description='" + this.description + '}';
     }
 
     @Override
@@ -115,6 +115,6 @@ public class Product implements Serializable {
         if (!(o instanceof Product))
             return false;
         Product obj = (Product) o;
-        return Objects.equals(this.code, obj.code);
+        return Objects.equals(this.id, obj.id);
     }
 }

@@ -13,18 +13,19 @@ import java.util.Objects;
 public class Item implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long code;
+    private Long id;
+    private Long position;
     private int quantity;
 
     @Column(name = "unit_price")
     private BigDecimal unitPrice;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "product_code")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "shopping_cart_code")
+    @JoinColumn(name = "shopping_cart_id")
     private ShoppingCart shoppingCart;
 
     /**
@@ -98,12 +99,12 @@ public class Item implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.code);
+        return Objects.hash(this.id);
     }
 
     @Override
     public String toString() {
-        return "ShoppingCartItem { code=" + this.code + '}';
+        return "ShoppingCartItem { code=" + this.id + '}';
     }
 
     @Override
@@ -115,7 +116,7 @@ public class Item implements Serializable {
         if (!(o instanceof Item))
             return false;
         Item obj = (Item) o;
-        return Objects.equals(this.code, obj.code);
+        return Objects.equals(this.id, obj.id);
     }
 }
 

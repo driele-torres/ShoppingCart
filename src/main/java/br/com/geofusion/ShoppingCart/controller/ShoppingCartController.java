@@ -21,38 +21,38 @@ class ShoppingCartController {
         }
 
         @PutMapping("/client/{idClient}/create")
-        ShoppingCart create(@PathVariable Long idClient) {
+        ShoppingCart create(@PathVariable String idClient) {
                 return service.create(idClient);
         }
 
         @GetMapping("/client/{idClient}")
-        List<ShoppingCart> allByIdClient(@PathVariable Long idClient) {
+        List<ShoppingCart> allByIdClient(@PathVariable String idClient) {
                 return service.findAll(idClient);
         }
 
         @GetMapping("/client/{idClient}/status/{status}")
-        List<ShoppingCart> allByIdClientAndStatus(@PathVariable Long idClient, @PathVariable int status) {
+        List<ShoppingCart> allByIdClientAndStatus(@PathVariable String idClient, @PathVariable int status) {
                 return service.findAllByIdClientAndStatus(idClient, status);
         }
 
         @GetMapping("/client/{idClient}/amount")
-        String allAmountByClient(@PathVariable Long idClient) {
+        String allAmountByClient(@PathVariable String idClient) {
                 BigDecimal amount = service.getAverageTicketAmount(idClient);
                 return amount.toString();
         }
 
-        @PutMapping("/client/{idClient}/invalidate")
-        boolean invalidate(@PathVariable Long idClient) {
+        @PutMapping("/client/{idClient}/checkout")
+        boolean invalidate(@PathVariable String idClient) {
                return service.invalidate(idClient);
         }
 
         @PostMapping("/client/{idClient}/items")
-        ShoppingCart addItem(@PathVariable Long idClient, @RequestBody Item item ) {
+        ShoppingCart addItem(@PathVariable String idClient, @RequestBody Item item ) {
                 return service.addItem(idClient, item);
         }
 
         @DeleteMapping("/client/{idClient}/items/{code}")
-        ShoppingCart removeItem(@PathVariable Long idClient, @PathVariable Long code ) {
+        ShoppingCart removeItem(@PathVariable String idClient, @PathVariable Long code ) {
                 return service.removeItem(idClient, code);
         }
 

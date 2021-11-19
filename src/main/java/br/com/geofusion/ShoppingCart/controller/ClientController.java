@@ -27,27 +27,27 @@ class ClientController {
                 return repository.save(newClient);
         }
 
-        @GetMapping("/{code}")
-        Client one(@PathVariable Long code) {
-                return repository.findById(code)
-                        .orElseThrow(() -> new ClientNotFoundException(code));
+        @GetMapping("/{clientId}")
+        Client one(@PathVariable String clientId) {
+                return repository.findById(clientId)
+                        .orElseThrow(() -> new ClientNotFoundException(clientId));
         }
 
-        @PutMapping("/{code}")
-        Client replaceClient(@RequestBody Client newClient, @PathVariable Long code) {
-                return repository.findById(code)
+        @PutMapping("/{clientId}")
+        Client replaceClient(@RequestBody Client newClient, @PathVariable String clientId) {
+                return repository.findById(clientId)
                         .map(client -> {
                                 client.setDescription(newClient.getDescription());
                                 return repository.save(client);
                         })
                         .orElseGet(() -> {
-                                newClient.setCode(code);
+                                newClient.setId(clientId);
                                 return repository.save(newClient);
                         });
         }
 
-        @DeleteMapping("/{code}")
-        void deleteClient(@PathVariable Long code) {
-                repository.deleteById(code);
+        @DeleteMapping("/{clientId}")
+        void deleteClient(@PathVariable String clientId) {
+                repository.deleteById(clientId);
         }
 }

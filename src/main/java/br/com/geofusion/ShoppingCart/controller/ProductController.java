@@ -27,15 +27,15 @@ class ProductController {
                 return repository.save(newProduct);
         }
 
-        @GetMapping("/{code}")
-        Product one(@PathVariable Long code) {
-                return repository.findById(code)
-                        .orElseThrow(() -> new ProductNotFoundException(code));
+        @GetMapping("/{productId}")
+        Product one(@PathVariable String productId) {
+                return repository.findById(productId)
+                        .orElseThrow(() -> new ProductNotFoundException(productId));
         }
 
-        @PutMapping("/{code}")
-        Product replaceProduct(@RequestBody Product newProduct, @PathVariable Long code) {
-                return repository.findById(code)
+        @PutMapping("/{productId}")
+        Product replaceProduct(@RequestBody Product newProduct, @PathVariable String productId) {
+                return repository.findById(productId)
                         .map(product -> {
                                 product.setDescription(newProduct.getDescription());
                                 product.setAmountAvailable(newProduct.getAmountAvailable());
@@ -44,13 +44,13 @@ class ProductController {
                                 return repository.save(product);
                         })
                         .orElseGet(() -> {
-                                newProduct.setCode(code);
+                                newProduct.setId(productId);
                                 return repository.save(newProduct);
                         });
         }
 
-        @DeleteMapping("/{code}")
-        void deleteProduct(@PathVariable Long code) {
-                repository.deleteById(code);
+        @DeleteMapping("/{productId}")
+        void deleteProduct(@PathVariable String productId) {
+                repository.deleteById(productId);
         }
 }

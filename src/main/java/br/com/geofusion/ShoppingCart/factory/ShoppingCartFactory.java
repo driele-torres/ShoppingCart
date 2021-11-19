@@ -1,17 +1,25 @@
 package br.com.geofusion.ShoppingCart.factory;
 
-//import org.springframework.web.bind.annotation.GetMapping;
-//import org.springframework.web.bind.annotation.PathVariable;
-//import java.util.List;
-
+import br.com.geofusion.ShoppingCart.model.Client;
+import br.com.geofusion.ShoppingCart.model.Item;
 import br.com.geofusion.ShoppingCart.model.ShoppingCart;
-import java.math.BigDecimal;
+import br.com.geofusion.ShoppingCart.model.StatusShoppingCart;
+import br.com.geofusion.ShoppingCart.repository.ShoppingCartRepository;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
 
 /**
  * Classe responsável pela criação e recuperação dos carrinhos de compras.
  */
 public class ShoppingCartFactory {
+
+    private final ShoppingCartRepository shoppingCartRepository;
+
+    public ShoppingCartFactory(ShoppingCartRepository shoppingCartRepository) {
+        this.shoppingCartRepository = shoppingCartRepository;
+    }
 
     /**
      * Cria e retorna um novo carrinho de compras para o cliente passado como parâmetro.
@@ -22,7 +30,15 @@ public class ShoppingCartFactory {
      * @return ShoppingCart
      */
     public ShoppingCart create(String clientId) {
-        return null;
+        ShoppingCart shoppingCart = null;
+        List<ShoppingCart> shoppingCarts = this.shoppingCartRepository.findByClientCodeAndStatus(clientId, StatusShoppingCart.ACTIVE.ordinal());
+        if (!shoppingCarts.isEmpty())
+            shoppingCart = shoppingCarts.stream().findFirst().get();
+        else {
+            shoppingCart = new ShoppingCart(new Client(clientId));
+            this.shoppingCartRepository.saveAndFlush(shoppingCart);
+        }
+        return shoppingCart;
     }
 
     /**
@@ -35,7 +51,14 @@ public class ShoppingCartFactory {
      * @return BigDecimal
      */
     public BigDecimal getAverageTicketAmount() {
-        return null;
+        List<ShoppingCart> shoppingCarts = this.shoppingCartRepository.findAll();
+        if (shoppingCarts.isEmpty())
+            return BigDecimal.ZERO;
+        BigDecimal amount = shoppingCarts
+                .stream()
+                .map(ShoppingCart::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return amount.divide(BigDecimal.valueOf(shoppingCarts.size())).setScale(2, RoundingMode.HALF_UP);
     }
 
     /**
@@ -47,10 +70,14 @@ public class ShoppingCartFactory {
      * e false caso o cliente não possua um carrinho.
      */
     public boolean invalidate(String clientId) {
-        return false;
-    }
-    public boolean invalidateByClient(String clientId) {
-        return false;
+        List<ShoppingCart> shoppingCarts = this.shoppingCartRepository.findByClientCodeAndStatus(clientId, StatusShoppingCart.ACTIVE.ordinal());
+        if (shoppingCarts.isEmpty())
+            return false;
+        ShoppingCart shoppingCart = shoppingCarts.stream().findFirst().get();
+        if (!shoppingCart.invalidate())
+            return false;
+        this.shoppingCartRepository.saveAndFlush(shoppingCart);
+        return !shoppingCart.isActive();
     }
 
 }
