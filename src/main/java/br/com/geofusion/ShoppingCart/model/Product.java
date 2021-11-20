@@ -12,7 +12,6 @@ import java.util.Objects;
  * Importante: Dois produtos são considerados iguais quando ambos possuem o
  * mesmo código.
  */
-
 @Entity
 @Table(name = "product")
 public class Product implements Serializable {
@@ -26,6 +25,14 @@ public class Product implements Serializable {
     @Column(name = "price_current")
     private BigDecimal priceCurrent;
 
+    public Product() {
+    }
+
+    public Product(String id) {
+        this.id = id;
+    }
+
+
     /**
      * Construtor da classe Produto.
      *
@@ -38,9 +45,6 @@ public class Product implements Serializable {
         this.description = description;
         this.priceCurrent = priceCurrent;
         this.amountAvailable = amountAvailable;
-    }
-
-    public Product() {
     }
 
     /**

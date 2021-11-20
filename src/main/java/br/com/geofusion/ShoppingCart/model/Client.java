@@ -13,6 +13,7 @@ public class Client implements Serializable {
 
     @Id
     private String id;
+    @Column(nullable = false, length = 100)
     private String description;
 
     public Client(){

@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Long> {
 
-    @Query( value = "SELECT * FROM shopping_cart u WHERE u.client_id = :client_id", nativeQuery = true)
+    @Query( value = "SELECT * FROM shopping_cart u WHERE u.client_id = :client_id order by u.id", nativeQuery = true)
     List<ShoppingCart> findByIdClient(@Param("client_id") String client_id);
 
-    @Query( value = "SELECT * FROM shopping_cart u WHERE u.client_id = :client_id and u.status = :status", nativeQuery = true)
+    @Query( value = "SELECT * FROM shopping_cart u WHERE u.client_id = :client_id and u.status = :status order by u.id", nativeQuery = true)
     List<ShoppingCart> findByIdClientAndStatus(@Param("client_id") String client_id, @Param("status") int status);
 }

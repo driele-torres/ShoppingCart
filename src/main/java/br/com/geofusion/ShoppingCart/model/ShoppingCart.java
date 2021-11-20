@@ -5,6 +5,7 @@ import br.com.geofusion.ShoppingCart.exception.ShoppingCartAddItemException;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -50,6 +51,14 @@ public class ShoppingCart implements Serializable {
         return items;
     }
 
+    public void setItems(Collection<Item> items) {
+        this.items = new ArrayList(items);
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+
     public StatusShoppingCart getStatus() {
         return status;
     }
@@ -85,10 +94,10 @@ public class ShoppingCart implements Serializable {
             throw new ShoppingCartAddItemException("object null");
         if (quantity <=0 )
             throw new ShoppingCartAddItemException("invalid quantity");
-        if (unitPrice.compareTo(BigDecimal.ZERO)>=0) {
+        if (unitPrice.compareTo(BigDecimal.ZERO)<=0) {
             unitPrice = product.getPriceCurrent();
         }
-        if (unitPrice.compareTo(BigDecimal.ZERO)>=0) {
+        if (unitPrice.compareTo(BigDecimal.ZERO)<=0) {
             throw new ShoppingCartAddItemException("invalid price");
         }
 
@@ -185,7 +194,7 @@ public class ShoppingCart implements Serializable {
         return Objects.equals(this.id, obj.id);
     }
 
-    private Item getItem(Product product){
+    public Item getItem(Product product){
         return this.items.stream()
                 .filter(itemPart -> product.getId().equals(itemPart.getProduct().getId()))
                 .findAny()

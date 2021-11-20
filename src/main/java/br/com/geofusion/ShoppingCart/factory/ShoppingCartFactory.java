@@ -80,11 +80,12 @@ public class ShoppingCartFactory {
         }
     }
 
-    ShoppingCart findShoppingCartActiveByIdClient(String clientId) throws ShoppingCartNotFoundException {
+    public ShoppingCart findShoppingCartActiveByIdClient(String clientId) throws ShoppingCartNotFoundException {
         List<ShoppingCart> shoppingCarts = this.shoppingCartRepository.findByIdClientAndStatus(clientId, StatusShoppingCart.ACTIVE.ordinal());
         if (shoppingCarts.isEmpty())
             throw new ShoppingCartNotFoundException(clientId);
         ShoppingCart shoppingCart = shoppingCarts.stream().findFirst().get();
         return shoppingCart;
     }
+
 }

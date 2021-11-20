@@ -14,19 +14,24 @@ public class Item implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private int position;
+    @Column(nullable = false)
     private int quantity;
 
-    @Column(name = "unit_price")
+    @Column(name = "unit_price", nullable = false)
     private BigDecimal unitPrice;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shopping_cart_id")
     private ShoppingCart shoppingCart;
+
+    public Item() {
+    }
 
     /**
      * Construtor da classe Item.
@@ -48,6 +53,12 @@ public class Item implements Serializable {
         this.unitPrice = unitPrice;
         this.quantity = quantity;
         this.position = position;
+    }
+
+    public Item( Product product, BigDecimal unitPrice, int quantity) {
+        this.product = product;
+        this.unitPrice = unitPrice;
+        this.quantity = quantity;
     }
 
     public int getPosition() {

@@ -1,12 +1,16 @@
 package br.com.geofusion.ShoppingCart.controller;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import br.com.geofusion.ShoppingCart.model.Item;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import br.com.geofusion.ShoppingCart.model.Item;
 import br.com.geofusion.ShoppingCart.model.ShoppingCart;
 import br.com.geofusion.ShoppingCart.service.ShoppingCartService;
 import org.springframework.web.bind.annotation.*;
@@ -21,38 +25,49 @@ class ShoppingCartController {
         }
 
         @PutMapping("/client/{clientId}/create")
-        ShoppingCart create(@PathVariable String clientId) {
-                return service.create(clientId);
+        ResponseEntity<ShoppingCart> create(@PathVariable String clientId) {
+                ShoppingCart shoppingCart = service.create(clientId);
+                return ResponseEntity.status(HttpStatus.OK).body(shoppingCart);
         }
 
         @GetMapping("/client/{clientId}")
-        List<ShoppingCart> findByIdClient(@PathVariable String clientId) {
-                return service.findByIdClient(clientId);
+        ResponseEntity<List<ShoppingCart>> findByIdClient(@PathVariable String clientId) {
+                List<ShoppingCart> shoppingCarts = service.findByIdClient(clientId);
+                return ResponseEntity.status(HttpStatus.OK).body(shoppingCarts);
         }
 
         @GetMapping("/client/{clientId}/status/{status}")
-        List<ShoppingCart> findByIdClientAndStatus(@PathVariable String clientId, @PathVariable int status) {
-                return service.findByIdClientAndStatus(clientId, status);
+        ResponseEntity<List<ShoppingCart>> findByIdClientAndStatus(@PathVariable String clientId, @PathVariable int status) {
+                List<ShoppingCart> shoppingCarts = service.findByIdClientAndStatus(clientId, status);
+                return ResponseEntity.status(HttpStatus.OK).body(shoppingCarts);
         }
 
         @PutMapping("/client/{clientId}/checkout")
-        boolean invalidate(@PathVariable String clientId) {
-               return service.invalidate(clientId);
+        ResponseEntity<Object> invalidate(@PathVariable String clientId) {
+                if (service.invalidate(clientId))
+                        return ResponseEntity.status(HttpStatus.OK).build();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         @PostMapping("/client/{clientId}/items")
-        ShoppingCart addItem(@PathVariable String clientId, @RequestBody Item item ) {
-                return service.addItem(clientId, item);
+        ResponseEntity<Object> addItem(@PathVariable String clientId, @RequestBody Item item ) {
+                if (service.addItem(clientId, item))
+                        return ResponseEntity.status(HttpStatus.OK).build();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        @DeleteMapping("/client/{idClient}/items/{code}")
-        ShoppingCart removeItem(@PathVariable String idClient, @PathVariable Long code ) {
-                return service.removeItem(idClient, code);
+        @DeleteMapping("/client/{clientId}/items/{productId}")
+        ResponseEntity<Object> removeItem(@PathVariable String clientId, @PathVariable String productId ) {
+                if (service.removeItem(clientId, productId))
+                        return ResponseEntity.status(HttpStatus.OK).build();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         @GetMapping("/amount")
-        String allAmount() {
+        ResponseEntity<Object> allAmount() {
                 BigDecimal amount = service.getAverageTicketAmount();
-                return amount.toString();
+                Map<String, Object> map = new HashMap<>();
+                map.put("amount", amount.toString());
+                return ResponseEntity.status(HttpStatus.OK).body(map);
         }
 }
