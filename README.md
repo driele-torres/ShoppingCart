@@ -1,21 +1,33 @@
-## Atenção
-Nesta prova será necessário implementar os métodos das classes conforme descrições dos Javadocs correspondentes.
+# Development
 
-Deverá ter interfaces REST para as seguintes funcionalidades:
+Using:
 
-    * Cadastro de produtos.
-    * Alteração de preços.
-    * Criação de carrinhos.
+- Maven
+- Spring Boot 2.5.6
+- Spring Web 
+- Spring Data JPA
+- H2 Database - Embedded
+- JUnit
+- Swagger
+- Docker
+ 
+----------------
 
-## Regras:
+## Run app
+###To create this project docker image 
+In the project folder run:
+> mvn clean install
+- change directory
+> cd docker
+- build the image
+> docker build -t shopping-cart .
+- list the image
+> docker images
 
-* Você poderá criar novos atributos, classes, métodos e reorganizar os pacotes.
-* É proibido mudar a assinatura dos métodos e construtores já existentes, exceto o construtor da classe ShoppingCart.
-* Você tem liberdade de adicionar frameworks e bibliotecas.
-* Não será necessário implementar nenhum tipo de interface gráfica.
-* A prova deve ser resolvida utilizando obrigatoriamente Java (Versão 8 ou superior).
-* É opcional o uso de bancos de dados e ferramentas de persistência. 
-(Caso opte por utilizar, deverá encaminhar no readme as instruções de inicialização do projeto).
-* É opcional a implementação de cobertura de testes.
-* Sua prova precisa compilar via Maven, impreterivelmente.
-* A entrega do teste deverá ser por meio de um repositório público ou anexada ao email.
+###To run this project docker image
+> docker run -d -p 8080:8080 --name shopping-cart-server shopping-cart
+
+#### Links localhost:
+Context Path: api/shopping/v1/
+- http://127.0.0.1:8080/api/shopping/v1/api-docs
+- http://127.0.0.1:8080/api/shopping/v1/swagger-ui.html
