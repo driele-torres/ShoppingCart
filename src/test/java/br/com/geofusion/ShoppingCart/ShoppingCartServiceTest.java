@@ -95,7 +95,7 @@ class ShoppingCartServiceTest {
     @Test
     @Order(8)
     public void checkItemInShoppingCartByIdClient(){
-        checkItemInShoppingCart();
+        checkItemInShoppingCart(1);
     }
 
     @Test
@@ -109,7 +109,7 @@ class ShoppingCartServiceTest {
     @Test
     @Order(10)
     public void checkItemStillInShoppingCartByIdClient(){
-        checkItemInShoppingCart();
+        checkItemInShoppingCart(1);
     }
 
     @Test
@@ -121,11 +121,11 @@ class ShoppingCartServiceTest {
     @Test
     @Order(12)
     public void checkItemIsNotInShoppingCartByIdClient(){
-        checkItemInShoppingCart();
+        checkItemInShoppingCart(0);
     }
 
-    private void checkItemInShoppingCart() {
+    private void checkItemInShoppingCart(int expected) {
         List<Item> items = this.shoppingCartService.findShoppingCartActiveByByIdClientItems(clientId);
-        assertEquals(items.size(), 1);
+        assertEquals(items.size(), expected);
     }
 }
